@@ -478,6 +478,7 @@ public class Post {
 		  line.contains("来自微微水木") ||
 		  line.contains("发自「今日水木") ||
 		  line.contains("来自「最水木") ||
+		  line.contains("发自 ismth") ||
 		  line.contains("论坛助手,") ||
 		  line.contains("来自 ")
 		  ) {
