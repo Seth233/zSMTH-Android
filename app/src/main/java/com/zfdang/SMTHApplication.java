@@ -39,6 +39,7 @@ public class SMTHApplication extends Application {
 
   // MaintainUserStatusService to UserStatusReceiver, to onNewIntent
   public static final String SERVICE_NOTIFICATION_MESSAGE = "SERVICE_NOTIFICATION_MESSAGE";
+  public static final String SERVICE_ACTIVE_USER_ID = "SERVICE_ACTIVE_USER_ID";
 
   public static final String USER_SERVICE_RECEIVER = "USER_SERVICE_RECEIVER";
 

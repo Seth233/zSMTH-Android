@@ -167,6 +167,13 @@ public class MaintainUserStatusWorker extends Worker {
             public UserStatus apply(UserStatus userStatus) throws Exception {
                 //Log.d(TAG, "3.0 call: " + userStatus.toString());
                 if (!TextUtils.equals(userStatus.getId(), "guest")) {
+                    // Show the session userid before the user information query completes.
+                    UserStatusReceiver receiver = SMTHApplication.mUserStatusReceiver;
+                    if (receiver != null) {
+                        Bundle bundle = new Bundle();
+                        bundle.putString(SMTHApplication.SERVICE_ACTIVE_USER_ID, userStatus.getId());
+                        receiver.send(Activity.RESULT_OK, bundle);
+                    }
                     // valid user
                     if (SMTHApplication.activeUser != null && TextUtils.equals(userStatus.getId(), SMTHApplication.activeUser.getId())) {
                         // current user is already cached in SMTHApplication
