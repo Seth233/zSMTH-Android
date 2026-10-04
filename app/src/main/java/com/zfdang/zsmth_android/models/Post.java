@@ -327,6 +327,7 @@ public class Post {
 
     // find signature start line
     int signatureStartLine = -1;
+    int signatureEndLine = -1;
     for (int i = lines.length - 1; i >= 0; i--) {
       String line = lines[i];
       if (line.startsWith("--") && line.length() <= 3) {
@@ -338,7 +339,7 @@ public class Post {
 
     // process content line by line
     StringBuilder sb = new StringBuilder();
-    int linebreak = 0;
+    int linebreak = -1;
     int signatureMode = 0;
     for (int i = 0; i < lines.length; i++) {
       String line = lines[i];
@@ -374,25 +375,23 @@ public class Post {
         continue;
       }
 
-      // handle quoted content
-      if (line.startsWith(":")) {
-        line = "<font color=#299999>" + line + "</font>";
+      if (line.startsWith("【 在 ")) {
+		if (i > 0) {
+			if (lines[i-1].trim().length() != 0) {
+				sb.append("<br />");
+			}
+		}
+        line = "<small><font color=#727272>" + line + "</font></small>";
         sb.append(line).append("<br />");
         continue;
       }
 
-      if (line.trim().length() == 0) {
-        linebreak++;
-        if (linebreak >= 2) {
-          // continuous linebreak, skip extra linebreak
-          continue;
-        } else {
-          sb.append(line).append("<br />");
-          continue;
-        }
-      } else {
-        // reset counter
-        linebreak = 0;
+      // handle quoted content
+      if (line.startsWith(":")) {
+//        line = "<font color=#00b4ae>" + line + "</font>";
+        line = "<small><i><font color=#727272>" + line + "</font></i></small>";
+        sb.append(line).append("<br />");
+        continue;
       }
 
       // handle signature
@@ -400,48 +399,107 @@ public class Post {
       if (i == signatureStartLine) {
         // entering signature mode
         signatureMode = 1;
-        sb.append(line).append("<br />");
+		if (i > 0) {
+			if (lines[i-1].trim().length() != 0) {
+				sb.append("<br />");
+			}
+		}
         continue;
       }
 
       // ※ 修改:·wpd419 于 Mar 29 09:43:17 2016 修改本文·[FROM: 111.203.75.*]
       // ※ 来源:·水木社区 http://www.newsmth.net·[FROM: 111.203.75.*]
-      if (line.contains("※ 来源:·")) {
-        // jump out of signature mode
-        signatureMode = 0;
-        line = line.replace("·", "")
-            .replace("http://www.mysmth.net", "")
-            .replace("http://www.newsmth.net", "")
-            .replace("http://m.mysmth.net", "")
-            .replace("http://m.newsmth.net", "")
-            .replace("http://mysmth.net", "")
-            .replace("https://exp.mysmth.net", "")
-            .replace("http://newsmth.net", "")
-            .replace("mysmth.net", "")
-            .replace("newsmth.net", "")
-            .replace("m.mysmth.net", "")
-            .replace("m.newsmth.net", "")
-            .replace("官方应用", "")
-            .replace("客户端", "");
+	  if (line.contains("※ 来源:·") || line.contains("※ 修改:·")) {
+		  // jump out of signature mode
+		  signatureMode = 0;
+		  signatureEndLine = i;
+		  boolean haveSignature = false;
+		  if (signatureStartLine != -1 && signatureEndLine != -1) {
+			  // check if signature is empty
+			  for (int j = signatureStartLine + 1; j < signatureEndLine; j++) {
+				  String strSignature = lines[j];
+				  if (strSignature.trim().length() != 0) {
+					  haveSignature = true;
+				  }
+			  }
+			  if (haveSignature) {
+				  for (int j = signatureStartLine; j < signatureEndLine; j++) {
+//					if (lines[j].trim().length() != 0) {
+						String strSignature = "<small><font color=#727272>" + lines[j] + "<br /></font></small>";
+						sb.append(strSignature);
+//					}
+				  }
+			  }
+			  signatureStartLine = -1;
+			  signatureEndLine = -1;
+		  }
 
-        line = "<font color=#727272>" + StringUtils.lookupIPLocation(line) + "</font>";
-        sb.append(line).append("<br />");
-        continue;
-      } else if (line.contains("※ 修改:·")) {
-        // jump out of signature mode
-        signatureMode = 0;
-        line = line.replace("·", "").replace("修改本文", "");
-        line = "<font color=#727272>" + StringUtils.lookupIPLocation(line) + "</font>";
-        sb.append(line).append("<br />");
-        continue;
-      }
+		  if (line.contains("※ 来源:·")) {
+			line = line.replace("·", "")
+				.replace("http://www.mysmth.net", "")
+				.replace("http://www.newsmth.net", "")
+				.replace("https://exp.mysmth.net", "水木特快")
+				.replace("https://exp.newsmth.net", "水木特快")
+				.replace("http://m.mysmth.net", "")
+				.replace("http://m.newsmth.net", "")
+				.replace("http://mysmth.net", "")
+				.replace("http://newsmth.net", "")
+				.replace("mysmth.net", "")
+				.replace("newsmth.net", "")
+				.replace("m.mysmth.net", "")
+				.replace("m.newsmth.net", "")
+				.replace("官方应用", "")
+				.replace("客户端", "");
+
+			line = "<small><font color=#727272>" + StringUtils.lookupIPLocation(line) + "</font></small>";
+//			sb.append(line).append("<br />");
+			sb.append(line);
+			continue;
+		  } else if (line.contains("※ 修改:·")) {
+			line = line.replace("·", "").replace("修改本文", "");
+			line = "<small><font color=#727272>" + StringUtils.lookupIPLocation(line) + "<br /></font></small>";
+			sb.append(line);
+			continue;
+		  }
+	  }
 
       // after handle last part of post content, if it's still in signature mode, add signature
       if (signatureMode == 1) {
-        line = "<small><font color=#727272>" + line + "</font></small>";
-        sb.append(line).append("<br />");
+//        line = "<small><font color=#727272>" + line + "</font></small>";
+//        sb.append(line).append("<br />");
         continue;
       }
+
+	  // remove app signature
+	  if (line.contains("发自zSMTH") ||
+		  (line.startsWith("--") && line.length() <= 3) ||
+		  line.contains("发自xsmth") ||
+		  line.contains("来自微水木") ||
+		  line.contains("来自微微水木") ||
+		  line.contains("发自「今日水木") ||
+		  line.contains("来自「最水木") ||
+		  line.contains("论坛助手,") ||
+		  line.contains("来自 ")
+		  ) {
+		continue;
+	  }
+
+	  // skip extra linebreak in normal text
+      if (line.trim().length() == 0) {
+		  if (linebreak == -1) {
+			  linebreak = i;
+		  } else {
+			  if (i == linebreak + 1) {
+				  linebreak = i;
+				  continue;
+			  } else {
+				  linebreak = i;
+			  }
+		  }
+      } else {
+		  // reset
+		  linebreak = -1;
+	  }
 
       // for other normal line, add it directly
       sb.append(line).append("<br />");

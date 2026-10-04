@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import androidx.appcompat.app.AppCompatActivity;
+import android.view.WindowManager;
 
 /**
  * Created by zfdang on 2016-5-10.
@@ -14,9 +15,10 @@ public class SMTHBaseActivity extends AppCompatActivity {
   // http://stackoverflow.com/questions/22924825/view-not-attached-to-window-manager-crash
   public void showProgress(String message) {
     if (pDialog == null) {
-      pDialog = new ProgressDialog(this, R.style.PDialog_MyTheme);
+      pDialog = new ProgressDialog(this);
       pDialog.setCancelable(true);
       pDialog.setCanceledOnTouchOutside(false);
+      pDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
     }
     pDialog.setMessage(message);
     pDialog.show();

@@ -8,11 +8,11 @@
 
   <ImageView
       android:id="@+id/post_popupmenu_icon"
-      android:layout_width="48dp"
-      android:layout_height="48dp"
+      android:layout_width="40dp"
+      android:layout_height="40dp"
       android:layout_gravity="center"
       android:contentDescription="desc"
-      android:paddingLeft="10dp"
+      android:paddingLeft="16dp"
       />
 
   <TextView

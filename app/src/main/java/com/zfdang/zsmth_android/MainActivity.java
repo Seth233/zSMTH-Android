@@ -356,7 +356,7 @@ public class MainActivity extends SMTHBaseActivity
       PendingIntent resultPendingIntent =
           PendingIntent.getActivity(MainActivity.this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-      Notification.Builder mBuilder = new Notification.Builder(this).setSmallIcon(R.drawable.ic_launcher)
+      Notification.Builder mBuilder = new Notification.Builder(this).setSmallIcon(R.drawable.ic_notification)
           .setContentTitle("zSMTH提醒")
           .setWhen(System.currentTimeMillis())
           .setAutoCancel(true)

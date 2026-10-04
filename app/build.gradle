@@ -33,7 +33,7 @@ android {
     }
     signingConfigs {
         release {
-            storeFile file("zsmth.release.jks")
+            storeFile file('C:\\BaiduYunDownload\\apk_dev\\zSMTH-Android\\app\\zsmth.release.jks')
             storePassword "zsmthdev"
             keyAlias "zsmth-release"
             keyPassword "zsmthdev"

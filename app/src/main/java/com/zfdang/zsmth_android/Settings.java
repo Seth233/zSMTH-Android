@@ -421,15 +421,15 @@ public class Settings {
     if (iFontIndex == 1) {
       return 1.0f;
     } else if (iFontIndex == 2) {
-      return 0.85f;
+      return 0.95f;
     } else if (iFontIndex == 0) {
-      return 1.15f;
+      return 1.05f;
     } else if (iFontIndex == 3) {
-      return 0.65f;
+      return 0.90f;
     } else if (iFontIndex == 4) {
-      return 1.35f;
+      return 1.10f;
     } else if (iFontIndex == 5) {
-      return 1.55f;
+      return 1.15f;
     }
     return 1.0f;
   }
