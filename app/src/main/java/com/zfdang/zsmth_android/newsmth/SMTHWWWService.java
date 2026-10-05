@@ -98,7 +98,7 @@ public interface SMTHWWWService {
     Observable<AjaxResponse> sendMail(@Path("mailid") String mailid, @Field("id") String userid, @Field("title") String title,
                                       @Field("content") String content, @Field("signature") String signature, @Field("backup") String backup, @Field("num") String num);
 
-    @Headers("X-Requested-With:XMLHttpRequest")
+    @Headers({"X-Requested-With: XMLHttpRequest", "Referer: https://www.newsmth.net/"})
     @GET("/nForum/user/ajax_session.json")
     Observable<UserStatus> queryActiveUserStatus();
 
